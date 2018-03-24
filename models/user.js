@@ -180,7 +180,7 @@ const matchinfo = mongoose.Schema({
 
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://139.59.47.127:27017/noddd');
+mongoose.connect('mongodb://localhost:27017/noddd');
 
 const user = mongoose.model('user', person,'users');
 const mat = mongoose.model('mat',match,'matchTable');
