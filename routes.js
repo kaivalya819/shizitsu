@@ -3,7 +3,7 @@
 const auth  = require('basic-auth');
 const jwt   = require('jsonwebtoken');
 
-
+const tryit=require('./functions/try');
 const matchData = require('./functions/matchData');
 const register  = require('./functions/register');
 const login     = require('./functions/login');
@@ -46,6 +46,7 @@ console.log('after log',t,r);
         console.log('inside register');
 		const name = req.body.name;
 		const phone = req.body.phone;
+		const email=req.body.email;
 		const password = req.body.password;
 
 		if (!name || !phone || !password || !name.trim()|| !phone.trim() || !password.trim()) {
@@ -54,7 +55,7 @@ console.log('after log',t,r);
 
 		} else {
 
-			register.registerUser(name, phone, password)
+			register.registerUser(name,email, phone, password)
 
 			.then(result => {
 
@@ -81,54 +82,56 @@ console.log('inside get');
 		}
 	});
 
-	router.put('/users/:id', (req,res) => {
+	router.put('/users', (req,res) => {
 console.log('inside chanePass');
-		if (checkToken(req)) {
 
+            const phone =req.query.phone;
 			const oldPassword = req.body.password;
 			const newPassword = req.body.newPassword;
+       console.log("here",phone,oldPassword,newPassword);
+			
 
-			if (!oldPassword || !newPassword || !oldPassword.trim() || !newPassword.trim()) {
-
-				res.status(400).json({ message: 'Invalid Request !' });
-
-			} else {
-
-				password.changePassword(req.params.id, oldPassword, newPassword)
+				password.changePassword(phone, oldPassword, newPassword)
 
 				.then(result => res.status(result.status).json({ message: result.message }))
 
 				.catch(err => res.status(err.status).json({ message: err.message }));
 
-			}
-		} else {
-
-			res.status(401).json({ message: 'Invalid Token !' });
-		}
+			
+		
 	});
 
 	router.post('/users/:id/password', (req,res) => {
 console.log('reset pass');
 		const email = req.params.id;
-		const token = req.body.token;
-		const newPassword = req.body.password;
-
-		if (!token || !newPassword || !token.trim() || !newPassword.trim()) {
+		
 
 			password.resetPasswordInit(email)
 
 			.then(result => res.status(result.status).json({ message: result.message }))
 
-			.catch(err => res.status(err.status).json({ message: err.message }));
+		.catch(err => res.status(err.status).json({ message: err.message }));}
 
-		} else {
+);
 
-			password.resetPasswordFinish(email, token, newPassword)
+
+	router.post('/users/password', (req,res) => {
+                 
+	 
+				 const phone=req.query.phone;
+				 const token=req.body.token;
+				 const newPassword=req.body.password;
+                  console.log("herer",phone,token,newPassword)	 
+
+
+		
+
+			password.resetPasswordFinish(phone, token, newPassword)
 
 			.then(result => res.status(result.status).json({ message: result.message }))
 
 			.catch(err => res.status(err.status).json({ message: err.message }));
-		}
+		
 	});
 
 	function checkToken(req) {
@@ -277,7 +280,16 @@ router.get('/prof',(req,res)=>{
 	res.status(200).json(result);}
 	).catch(err => res.status(err.status).json({ message: err.message }));
 });
-
+router.post('/arrangewmrfbools',(req,res)=>{
+	
+	
+	console.log("here");
+	tryit.getSorted().then(result=>{
+		
+		console.log("sending",result);
+	res.status(200).json(result);}
+	).catch(err => res.status(err.status).json({ message: err.message }));
+});
 
 
 
