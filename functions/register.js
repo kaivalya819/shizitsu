@@ -1,9 +1,7 @@
-
-
 const user = require('../models/user');
 const bcrypt = require('bcryptjs');
 const person = user.user;
-exports.registerUser = (name, phone, password) => 
+exports.registerUser = (name,email, phone, password) => 
 
 	new Promise((resolve,reject) => {
 
@@ -14,10 +12,13 @@ exports.registerUser = (name, phone, password) =>
 
 			name: name,
 			phone: phone,
+			email:email,
 			support:"",
 			points:21000,
 			rpoints:21000,
-			rank:null,
+			rank:0,
+			temp_password	: undefined,
+	temp_password_time: undefined,
 			hashed_password: hash,
 			created_at: new Date(),
 			matchPersonal       : {
@@ -122,5 +123,3 @@ exports.registerUser = (name, phone, password) =>
 			}
 		});
 	});
-
-
