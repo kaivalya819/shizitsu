@@ -6,13 +6,15 @@ const minfo=user.matchinf;
 const usersc =user.user;
 const { forEach } = require('p-iteration');
 const {async} = require('async');
+
 var mcount;
 
 
 
 
 
-
+		
+	
 exports.getBetConfirmation=(phone,matchis,categ,bpoints,bselect)=>
 
 new Promise((resolve,reject)=>{
@@ -27,7 +29,7 @@ new Promise((resolve,reject)=>{
 	var upoints,matstat;
 	var bYes,msg;
 	
-	console.log("num",phn,bo,bs,m);
+
 	
 	mat.findOne({_id:matchId}).then(grab=>{
              matstat=grab.mstatus;
@@ -38,7 +40,7 @@ new Promise((resolve,reject)=>{
 			 var rpnts=grb.rpoints;
 			 var change=already-bp;
 			 rpnts=rpnts+change;
-			  console.log("already is",already,rpnts);
+			  
 			  var betp="matchPersonal.m"+matchId+".bo"+categry;
 			  var bets="matchPersonal.m"+matchId+".bs"+categry;
           usersc.updateOne({phone:phn},{$set:{rpoints:rpnts,[betp]:bp,[bets]:bsel}}).then(got=>{
@@ -63,7 +65,7 @@ new Promise((resolve,reject)=>{
 		
 	}else{
 		msg="yetordone";
-		console.log("msg is",msg);
+		
 		resolve({status:200,msg});
 		
 	}
@@ -71,53 +73,6 @@ new Promise((resolve,reject)=>{
 	}).catch(err => reject({ status: 500, message: 'Internal Server Error !' }));
 	});	
 	
-/**	usersc.findOne({phone:phn}).then(grab=>{
-		console.log("b Fone");
-	   	upoints=grab.points;
-	  console.log("f one",upoints);
-	    var bd="m"+matchId+".bo"+categry;
-	    var aldy=grab.matchPersonal[n][m];
-		console.log("here",aldy,bd);
-	  mat.findOne({_id:matchId}).then(got=>{
-		  mstatus=got.mstatus;
-		  
-	  })
-	  .catch(err => reject({ status: 500, message: 'Internal Server Error !' }));
-	  
-
-		if((upoints+already)>bpoints && mstatus=="open"){
-			
-			
-			var newpoints=upoints+already-bpoints;
-			   
-			console.log("kinda working",n,m);
-		    	
-		 	var e="matchPersonal."+n+"."+l;
-			
-			
-			console.log("here",e);
-
-			usersc.updateOne({phone:phn},{$set:{rpoints:newpoints,[build]:bp,[e]:bsel    }   })
-			.then(result=>{
-				console.log("success",result);
-                    resolve({status:200,message:'Bet Placed'});		
-			
-			}).catch(err => reject({ status: 500, message: 'Internal Server Error !' }));
-			
-		}
-		else if(mstatus=="open"){
-            resolve({status:200,message:'Not Enough Points'});		
-		}
-		else{
-			console.log("Match not open for betting yet");
-			resolve({status:200,message:'Match not open for betting yet'});}
-		
-	}
-	).catch(err => reject({ status: 500, message: 'Internal Server Error !' }));
-	
-}
-
-);**/
 
 exports.getIndividual=(matchId,phone)=>
 
@@ -127,9 +82,9 @@ exports.getIndividual=(matchId,phone)=>
             var idd=matchId;
             var userGuess=[];
 			var userDet=[];
-            console.log("insidedded",phn,idd);
+        
             getIndividualDetails(phn,idd).then(userD=>{
-            console.log("here it is",userD);
+        
 			for(let e=0;e<7;e++){
 			   	
 				userDet[e]=userD.mst[e];
@@ -142,14 +97,14 @@ exports.getIndividual=(matchId,phone)=>
             mat.findOne({_id:idd}).then(grab=>{
 
         var mStatus=grab.mstatus;
-		           console.log("no here its",grab,userDet,userGuess);
+		           
 
 		
              var mResults=[];
 
             mResults[0]=grab.mResult.mWinner; 
 														
-            console.log("matchResult");
+            
 
 			mResults[1]=grab.mResult.mRuns1;
             mResults[2]=grab.mResult.mWickets1; 
@@ -158,8 +113,8 @@ exports.getIndividual=(matchId,phone)=>
 			mResults[5]=grab.mResult.manMatch;
             mResults[6]=grab.mResult.tsixes;
 			
-console.log("one step back");
-        console.log("one more",userDet,mStatus,userGuess,mResults);
+
+        
         resolve({status:200,userDet,mStatus,mResults,userGuess});}).catch(err => reject({ status: 500, message: 'Internal Server Error !' }));
 
 
@@ -184,7 +139,7 @@ new Promise((resolve,reject)=>{
 		var g="m"+m;
 		var y="bo"+c;
 		var bs="bs"+c;
-		console.log("here",g,y,bs);
+		
 		 betStatus=guser.matchPersonal[g][y];
 		 betOption=guser.matchPersonal[g][bs];
 		upoints=upoints+betStatus;
@@ -208,31 +163,12 @@ new Promise((resolve,reject)=>{
 
 
 
-	function getFirstDetails(u){
-		console.log("working");
-	 return new Promise((resolve,reject)=>{
-
-	 usersc.find({phone:"4545454545"},{matchPersonal:0}).then(grab =>{
-		              console.log("found");
-		 var pnts="400";
-		 resolve({pnts});
-	 }).catch(err => reject({status: 500, message: 'Internal server error !'}));
-
-
-
- });}
+	
  
- function getparticular(){
-	 return new Promise((resolve,reject)=>{
-		 
-		 
-		 
-	 });
-	 
- }
+ 
  
 function getIndividualDetails(userPhn,idd){
-console.log("inside getIndi");
+
 return new Promise((resolve,reject)=>{
 
 usersc.findOne({phone:userPhn}).then(grab=>{
@@ -241,22 +177,22 @@ var e="m"+idd;
 
 var mst=[];
 
-console.log("cdc",e);
+
 for(let i=1;i<8;i++)    //0-6
 {
 var f="bo"+i;
-	console.log("first for");
+	
 
 mst[i-1]=grab.matchPersonal[e][f];
 }
 for(let y=7;y<14;y++){
-		console.log("second for");
+		
 
   var n=y-6;
   var g="bs"+n;
   mst[y]=grab.matchPersonal[e][g];
 }
-console.log("shiv",mst);
+
 resolve({mst});
 
 
@@ -284,7 +220,7 @@ new Promise((resolve,reject)=>{
 
 
 async function aFunction(Rarray){
-	console.log("length",Rarray.length);
+	
 	var contactPoints=[];
 	var support=[];
 	var tru;
@@ -366,13 +302,14 @@ exports.getmatchStatusData=(phne)=>
  new Promise((resolve,reject)=>{
 	 syncMatch(phne).then(caught=>{
         		 
-		var points=caught.points.points;
+		var points=caught.twArray.pnts[0];
+		var rank=caught.twArray.pnts[1];
          var htbc=caught.obj.htbc; 
                  var vtbc=caught.obj.vtbc;
 				 var statusArray=caught.obj.statusArray;
 				 var sDates=caught.obj.sDates;
 		 
-		 resolve({status:200,htbc,vtbc,statusArray,sDates,points});
+		 resolve({status:200,htbc,vtbc,statusArray,sDates,points,rank});
 	 }).catch(err => reject({ status: 500, message: 'Internal Server Error !' }));
 	 
 	 
@@ -380,10 +317,10 @@ exports.getmatchStatusData=(phne)=>
 
 
 async function syncMatch(phn){
-	var points    = await getthem(phn);
+	var twArray    = await getthem(phn);
 	var obj  = await getHeavy();
-	console.log("problem");
-	return({points,obj});
+	
+	return({twArray,obj});
 }
 
 
@@ -407,7 +344,7 @@ return new Promise((resolve,reject)=>{
                 sDates.push(grab.grab[i].sDate);
 				           
 				statusArray.push(grab.grab[i].mstatus);
-				console.log("here I");
+				
 				if(i>55)
 				{ 
 					htbc.push(grab.grab[i].hTeam);
@@ -417,7 +354,7 @@ return new Promise((resolve,reject)=>{
 				
 
 	   }
-	       console.log("returning well");
+	       
 		   resolve({htbc,vtbc,statusArray,sDates}); 
 	  }).catch(err => reject({ status: 500, message: 'Internal Server Error !' }));
 	  
@@ -428,7 +365,7 @@ return new Promise((resolve,reject)=>{
 		   
            return new Promise((resolve,reject)=>{
 			   mat.find({}).then(grab=>{
-				   console.log("caught track");
+				   
 				   resolve({grab});
 				   
 			   }).catch(e=>reject("reject"));
@@ -442,19 +379,22 @@ return new Promise((resolve,reject)=>{
    
    async function getthem(phn){
 	   var r;
-	   	console.log("here II");
+	   	
 
 	   r = await getthemfast(phn);
+	   
 	  return (r);	   
    }
    
    async function getthemfast(phn){
 	   return new Promise((resolve,reject)=>{
 		   usersc.findOne({phone:phn}).then(grab=>{
+                     var pnts=[];	
+					 
+			   pnts.push(grab.points);
+			   pnts.push(grab.rank);
 			   
-			   var points=grab.points;
-			   console.log("pointsssss",points)
-		   resolve({points});
+		   resolve({pnts});
 			   
 		   }
 		   
@@ -535,7 +475,7 @@ new Promise((resolve,reject)=>{
 			
 				
 			}
-			console.log("");
+			
 			resolve({status:200,winloss,name,pnts,rpnts,supporting});
 			
 		}
