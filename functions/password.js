@@ -1,20 +1,23 @@
 'use strict';
 
-const user = require('../models/user');
+const useru = require('../models/user');
+const usersc =useru.user;
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 const randomstring = require("randomstring");
 const config = require('../config/config.json');
 
-exports.changePassword = (email, password, newPassword) => 
+exports.changePassword = (phone, password, newPassword) => 
 
 	new Promise((resolve, reject) => {
+           console.log("her",phone);
+		   
+		usersc.findOne({ phone:phone })
 
-		user.find({ email: email })
+		.then(user => {
 
-		.then(users => {
-
-			let user = users[0];
+			
+			console.log("here",user);
 			const hashed_password = user.hashed_password;
 
 			if (bcrypt.compareSync(password, hashed_password)) {
@@ -38,23 +41,23 @@ exports.changePassword = (email, password, newPassword) =>
 
 	});
 
-exports.resetPasswordInit = email =>
+exports.resetPasswordInit = (email) =>
 
 	new Promise((resolve, reject) => {
 
 		const random = randomstring.generate(8);
 
-		user.find({ email: email })
+		usersc.findOne({ email: email })
 
-		.then(users => {
-
-			if (users.length == 0) {
+		.then(grab => {
+             console.log("here",email);
+			if (grab==null) {
 
 				reject({ status: 404, message: 'User Not Found !' });
 
 			} else {
 
-				let user = users[0];
+				let user = grab;
 
 				const salt = bcrypt.genSaltSync(10);
 				const hash = bcrypt.hashSync(random, salt);
@@ -76,11 +79,11 @@ exports.resetPasswordInit = email =>
     			to: email,  
     			subject: 'Reset Password Request ', 
     			html: `Hello ${user.name},<br><br>
-    			&nbsp;&nbsp;&nbsp;&nbsp; Your reset password token is <b>${random}</b>. 
-    			If you are viewing this mail from a Android Device click this <a href = "http://learn2crack/${random}">link</a>. 
-    			The token is valid for only 2 minutes.<br><br>
-    			Thanks,<br>
-    			Learn2Crack.`
+    			&nbsp;&nbsp;&nbsp;&nbsp; Your reset password token is <b>${random}</b>.  
+    			The token is valid for only 3 minutes.<br><br>
+    			
+				Thanks,<br>
+    			HULA IPL 18`
     		
 			};
 
@@ -102,11 +105,11 @@ exports.resetPasswordInit = email =>
 		});
 	});
 
-exports.resetPasswordFinish = (email, token, password) => 
+exports.resetPasswordFinish = (phone, token, password) => 
 
 	new Promise((resolve, reject) => {
 
-		user.find({ email: email })
+		usersc.find({phone: phone })
 
 		.then(users => {
 
@@ -116,7 +119,7 @@ exports.resetPasswordFinish = (email, token, password) =>
 			const seconds = Math.floor(diff / 1000);
 			console.log(`Seconds : ${seconds}`);
 
-			if (seconds < 120) {
+			if (seconds < 180) {
 
 				return user;
 
