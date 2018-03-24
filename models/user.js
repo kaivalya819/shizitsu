@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 
 const Schema   = mongoose.Schema;
@@ -10,6 +9,9 @@ const person   = mongoose.Schema({
 	phone         	: {type:String,index:{ unique:true}},
 	points          : Number,
 	support          :String,
+temp_password	: String,
+	temp_password_time: String,
+	email           :String,
 	rank          :Number,
 	
 	rpoints         :  Number,
